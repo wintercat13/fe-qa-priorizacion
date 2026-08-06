@@ -1,0 +1,70 @@
+<div class="usuarios-header">
+  <div>
+    <h2>Usuarios y roles</h2>
+    <p class="path">Inicio / Usuarios y roles</p>
+  </div>
+  <a routerLink="/usuarios/nuevo" class="btn-new">+ Nuevo usuario</a>
+</div>
+
+<section class="view">
+  @if (mensaje()) {
+    <div class="toast show" role="status">{{ mensaje() }}</div>
+  }
+
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  <div class="card">
+    <h3>Listado de usuarios</h3>
+    <p class="card-sub">Gestión de accesos del equipo QA</p>
+
+    @if (loading()) {
+      <p class="empty">Cargando usuarios…</p>
+    } @else if (usuarios().length === 0) {
+      <p class="empty">No hay usuarios registrados.</p>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th class="actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of usuarios(); track u.id) {
+              <tr [class.inactive]="!u.activo">
+                <td><b>{{ u.nombre }}</b></td>
+                <td>{{ u.correo }}</td>
+                <td>{{ rolFormateado(u.rol) }}</td>
+                <td>
+                  <span class="pill" [class.pill-activo]="u.activo" [class.pill-inactivo]="!u.activo">
+                    {{ u.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="actions">
+                  <a [routerLink]="['/usuarios', u.id, 'editar']" class="btn-action edit">Editar</a>
+                  <button
+                    class="btn-action deactivate"
+                    [disabled]="!u.activo || usuarioDesactivando() === u.id"
+                    (click)="desactivar(u)"
+                  >
+                    @if (usuarioDesactivando() === u.id) {
+                      <span class="spinner"></span>
+                    } @else {
+                      Desactivar
+                    }
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

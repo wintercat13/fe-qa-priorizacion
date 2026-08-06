@@ -9,16 +9,47 @@ export const routes: Routes = [
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
-    path: 'dashboard',
+    path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-  },
-  {
-    path: 'usuarios',
-    canActivate: [authGuard, roleGuard('ADMINISTRADOR_QA')],
-    loadComponent: () =>
-      import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import('./shared/layout/admin-layout/admin-layout.component').then(
+        (m) => m.AdminLayoutComponent
+      ),
+    children: [
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'usuarios',
+        canActivate: [roleGuard('ADMINISTRADOR_QA')],
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/usuarios/usuario-list/usuario-list.component').then(
+                (m) => m.UsuarioListComponent
+              ),
+          },
+          {
+            path: 'nuevo',
+            loadComponent: () =>
+              import('./features/usuarios/usuario-form/usuario-form.component').then(
+                (m) => m.UsuarioFormComponent
+              ),
+          },
+          {
+            path: ':id/editar',
+            loadComponent: () =>
+              import('./features/usuarios/usuario-form/usuario-form.component').then(
+                (m) => m.UsuarioFormComponent
+              ),
+          },
+        ],
+      },
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+    ],
   },
   {
     path: 'acceso-denegado',

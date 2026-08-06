@@ -1,55 +1,12 @@
-<div id="app-shell">
-  <aside class="sidebar">
-    <span class="brand"><span class="dot"></span><span class="txt">QA · MVP</span></span>
+<header class="topbar">
+  <div>
+    <h2>Dashboard</h2>
+    <p class="path">Inicio / Dashboard</p>
+  </div>
+  <span class="role-badge">{{ rolFormateado() }}</span>
+</header>
 
-    <nav>
-      <div class="nav-group">Principal</div>
-      <button class="nav-item active" routerLink="/dashboard" routerLinkActive="active">
-        <span class="ic">⊞</span><span class="txt">Dashboard</span>
-      </button>
-
-      <div class="nav-group">Gestión</div>
-      <button class="nav-item">
-        <span class="ic">☰</span><span class="txt">Casos de prueba</span>
-      </button>
-      <button class="nav-item">
-        <span class="ic">⇅</span><span class="txt">Priorización</span>
-      </button>
-
-      <div class="nav-group">Administración</div>
-      <button
-        class="nav-item"
-        [class.disabled]="!esAdmin()"
-        [disabled]="!esAdmin()"
-      >
-        <span class="ic">👤</span><span class="txt">Usuarios</span>
-      </button>
-    </nav>
-
-    <div class="sidebar-foot">
-      <div class="user-chip">
-        <div class="avatar">{{ iniciales() }}</div>
-        <div class="who">
-          <b>{{ usuario?.nombre ?? 'Usuario' }}</b>
-          <span>{{ rolFormateado() }}</span>
-        </div>
-      </div>
-      <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
-    </div>
-  </aside>
-
-  <main class="main">
-    <header class="topbar">
-      <div>
-        <h2>Dashboard</h2>
-        <p class="path">Inicio / Dashboard</p>
-      </div>
-      <span class="role-badge">{{ rolFormateado() }}</span>
-    </header>
-
-    <section class="view">
-      <p>Bienvenido(a) al Sistema Inteligente de Gestión QA.</p>
-      <p class="muted">Módulo en construcción para la historia US-01.</p>
-    </section>
-  </main>
-</div>
+<section class="view">
+  <p>Bienvenido(a) al Sistema Inteligente de Gestión QA.</p>
+  <p class="muted">Módulo en construcción para la historia US-01.</p>
+</section>

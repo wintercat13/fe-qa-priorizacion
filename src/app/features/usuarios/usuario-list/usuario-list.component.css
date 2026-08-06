@@ -1,0 +1,251 @@
+:host {
+  display: block;
+}
+
+.usuarios-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 30px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.usuarios-header h2 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.path {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.view {
+  padding: 26px 30px 50px;
+  animation: viewIn 0.3s ease;
+}
+
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card h3 {
+  margin: 0 0 3px 0;
+  font-size: 16px;
+}
+
+.card-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.btn-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-new:hover {
+  background: var(--teal-dark);
+}
+
+.empty {
+  color: var(--muted);
+  font-size: 14px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead tr {
+  background: var(--navy);
+}
+
+th {
+  color: #fff;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 12px 14px;
+}
+
+td {
+  padding: 13px 14px;
+  font-size: 13px;
+  border-top: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+tbody tr {
+  transition: background 0.12s;
+}
+
+tbody tr:hover {
+  background: #FAFCFD;
+}
+
+tbody tr.inactive td {
+  color: var(--muted);
+}
+
+tbody tr.inactive td b {
+  color: var(--muted);
+}
+
+.actions {
+  white-space: nowrap;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+.btn-action:last-child {
+  margin-right: 0;
+}
+
+.btn-action.edit {
+  background: var(--teal-pale);
+  color: var(--teal-dark);
+}
+
+.btn-action.deactivate {
+  background: var(--risk-pale);
+  color: var(--risk);
+}
+
+.btn-action:disabled {
+  background: #F1F3F4;
+  color: #B8C3C8;
+  cursor: not-allowed;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pill-activo {
+  background: var(--teal-pale);
+  color: var(--teal-dark);
+}
+
+.pill-inactivo {
+  background: #F1F3F4;
+  color: var(--muted);
+}
+
+.login-error {
+  background: var(--risk-pale);
+  color: var(--risk);
+  border: 1px solid #EAC5BF;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.toast {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--navy-darker);
+  color: #fff;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+  z-index: 50;
+  font-weight: 500;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(181, 71, 61, 0.3);
+  border-top-color: var(--risk);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 700px) {
+  .usuarios-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .btn-action {
+    margin-right: 0;
+  }
+}
