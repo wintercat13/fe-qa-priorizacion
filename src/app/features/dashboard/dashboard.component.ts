@@ -1,12 +1,11 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
@@ -31,11 +30,4 @@ export class DashboardComponent {
     }
   });
 
-  logout(): void {
-    this.authService.logout();
-  }
-
-  esAdmin(): boolean {
-    return this.usuario?.rol === 'ADMINISTRADOR_QA';
-  }
 }
