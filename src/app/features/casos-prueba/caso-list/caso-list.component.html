@@ -1,0 +1,74 @@
+<div class="casos-header">
+  <div>
+    <h2>Casos de prueba</h2>
+    <p class="path">Inicio / Casos de prueba</p>
+  </div>
+  <a routerLink="/casos-prueba/nuevo" class="btn-new">+ Nuevo caso</a>
+</div>
+
+<section class="view">
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="search">
+          <span class="ic">🔍</span>
+          <input
+            type="text"
+            [ngModel]="filtroTexto()"
+            (ngModelChange)="filtroTexto.set($event)"
+            placeholder="Buscar por título o módulo..."
+          />
+        </div>
+        <select
+          class="filter"
+          [ngModel]="filtroCriticidad()"
+          (ngModelChange)="filtroCriticidad.set($event)"
+        >
+          <option value="">Toda criticidad</option>
+          <option value="ALTA">Alta</option>
+          <option value="MEDIA">Media</option>
+          <option value="BAJA">Baja</option>
+        </select>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <p class="empty">Cargando casos de prueba…</p>
+    } @else if (casos().length === 0) {
+      <p class="empty">No hay casos de prueba registrados.</p>
+    } @else if (casosFiltrados().length === 0) {
+      <p class="empty">Sin resultados para este filtro.</p>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Módulo</th>
+              <th>Criticidad</th>
+              <th>Estado</th>
+              <th>Prioridad</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of casosFiltrados(); track c.id) {
+              <tr>
+                <td class="id">CP-{{ c.id }}</td>
+                <td>{{ c.titulo }}</td>
+                <td>{{ c.modulo }}</td>
+                <td class="crit" [class]="criticidadClass(c.criticidad)">{{ c.criticidad | titlecase }}</td>
+                <td><span class="pill" [class]="estadoClass(c.estado)">{{ c.estado | titlecase }}</span></td>
+                <td><span class="score-badge" [class]="scoreClass(c.scorePrioridad)">{{ c.scorePrioridad.toFixed(1) }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
