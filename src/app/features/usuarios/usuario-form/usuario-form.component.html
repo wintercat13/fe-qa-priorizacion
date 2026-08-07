@@ -1,0 +1,75 @@
+<div class="form-header">
+  <div>
+    <h2>{{ titulo() }}</h2>
+    <p class="path">Inicio / Usuarios y roles / {{ titulo() }}</p>
+  </div>
+  <a routerLink="/usuarios" class="btn-secondary">← Volver al listado</a>
+</div>
+
+<section class="view">
+  @if (loading()) {
+    <p class="empty">Cargando usuario…</p>
+  } @else {
+    <div class="card form-card">
+      @if (error()) {
+        <div class="login-error" role="alert">{{ error() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="field">
+          <label for="nombre">Nombre completo</label>
+          <input id="nombre" type="text" formControlName="nombre" placeholder="Ej: Juan Soto" />
+          @if (nombre?.invalid && nombre?.touched) {
+            <span class="field-error">
+              @if (nombre?.errors?.['required']) { El nombre es obligatorio. }
+              @else if (nombre?.errors?.['minlength']) { Mínimo 3 caracteres. }
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="correo">Correo corporativo</label>
+          <input id="correo" type="email" formControlName="correo" placeholder="nombre.apellido@banco.cl" />
+          @if (correo?.invalid && correo?.touched) {
+            <span class="field-error">
+              @if (correo?.errors?.['required']) { El correo es obligatorio. }
+              @else if (correo?.errors?.['email']) { Ingresa un correo válido. }
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label>Rol de acceso</label>
+          <div class="role-grid">
+            @for (r of roles; track r) {
+              <div
+                class="role-opt"
+                [class.active]="rol?.value === r"
+                (click)="rol?.setValue(r)"
+                role="radio"
+                [attr.aria-checked]="rol?.value === r"
+              >
+                {{ r === 'ADMINISTRADOR_QA' ? 'Admin. QA' : r === 'DESARROLLADOR' ? 'Desarroll.' : 'QA Tester' }}
+              </div>
+            }
+          </div>
+          @if (rol?.invalid && rol?.touched) {
+            <span class="field-error">Selecciona un rol.</span>
+          }
+        </div>
+
+        <div class="actions">
+          <a routerLink="/usuarios" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary" [disabled]="guardando()">
+            @if (guardando()) {
+              <span class="spinner"></span>
+              Guardando…
+            } @else {
+              Guardar
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</section>
