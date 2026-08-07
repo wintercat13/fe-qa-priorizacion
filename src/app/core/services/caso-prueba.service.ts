@@ -18,12 +18,30 @@ export class CasoPruebaService {
       );
   }
 
+  obtener(id: number): Observable<CasoPrueba> {
+    return this.http
+      .get<ApiResponse<CasoPrueba>>(`${this.baseUrl}/${id}`)
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo cargar el caso de prueba.', true))
+      );
+  }
+
   crear(payload: CasoPruebaPayload): Observable<CasoPrueba> {
     return this.http
       .post<ApiResponse<CasoPrueba>>(this.baseUrl, payload)
       .pipe(
         map((response) => response.data),
         catchError((error) => this.handleError(error, 'No se pudo registrar el caso de prueba.'))
+      );
+  }
+
+  editar(id: number, payload: CasoPruebaPayload): Observable<CasoPrueba> {
+    return this.http
+      .put<ApiResponse<CasoPrueba>>(`${this.baseUrl}/${id}`, payload)
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo actualizar el caso de prueba.', true))
       );
   }
 
@@ -36,10 +54,12 @@ export class CasoPruebaService {
       );
   }
 
-  private handleError(error: HttpErrorResponse, fallback: string): Observable<never> {
+  private handleError(error: HttpErrorResponse, fallback: string, notFound = false): Observable<never> {
     let mensaje = fallback;
 
-    if (error.status === 401) {
+    if (error.status === 404 && notFound) {
+      mensaje = 'El caso de prueba no existe o no está disponible.';
+    } else if (error.status === 401) {
       mensaje = 'Tu sesión expiró. Vuelve a iniciar sesión.';
     } else if (error.status === 403) {
       mensaje = 'No tienes permisos para realizar esta acción.';

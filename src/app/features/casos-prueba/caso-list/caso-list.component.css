@@ -240,6 +240,29 @@ td.id {
   margin-bottom: 16px;
 }
 
+.actions {
+  white-space: nowrap;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-action.edit {
+  background: var(--teal-pale);
+  color: var(--teal-dark);
+}
+
 @media (max-width: 700px) {
   .casos-header {
     flex-direction: column;

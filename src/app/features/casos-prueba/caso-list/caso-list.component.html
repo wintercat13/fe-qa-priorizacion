@@ -53,6 +53,7 @@
               <th>Criticidad</th>
               <th>Estado</th>
               <th>Prioridad</th>
+              <th class="actions">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -64,6 +65,9 @@
                 <td class="crit" [class]="criticidadClass(c.criticidad)">{{ c.criticidad | titlecase }}</td>
                 <td><span class="pill" [class]="estadoClass(c.estado)">{{ c.estado | titlecase }}</span></td>
                 <td><span class="score-badge" [class]="scoreClass(c.scorePrioridad)">{{ c.scorePrioridad.toFixed(1) }}</span></td>
+                <td class="actions">
+                  <a [routerLink]="['/casos-prueba', c.id, 'editar']" class="btn-action edit">Editar</a>
+                </td>
               </tr>
             }
           </tbody>

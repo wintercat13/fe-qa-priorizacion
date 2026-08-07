@@ -38,6 +38,13 @@ export const routes: Routes = [
                 (m) => m.CasoFormComponent
               ),
           },
+          {
+            path: ':id/editar',
+            loadComponent: () =>
+              import('./features/casos-prueba/caso-edit/caso-edit.component').then(
+                (m) => m.CasoEditComponent
+              ),
+          },
         ],
       },
       {
