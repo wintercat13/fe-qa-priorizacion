@@ -22,6 +22,32 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
+        path: 'casos-prueba',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./features/casos-prueba/caso-list/caso-list.component').then(
+                (m) => m.CasoListComponent
+              ),
+          },
+          {
+            path: 'nuevo',
+            loadComponent: () =>
+              import('./features/casos-prueba/caso-form/caso-form.component').then(
+                (m) => m.CasoFormComponent
+              ),
+          },
+          {
+            path: ':id/editar',
+            loadComponent: () =>
+              import('./features/casos-prueba/caso-edit/caso-edit.component').then(
+                (m) => m.CasoEditComponent
+              ),
+          },
+        ],
+      },
+      {
         path: 'usuarios',
         canActivate: [roleGuard('ADMINISTRADOR_QA')],
         children: [

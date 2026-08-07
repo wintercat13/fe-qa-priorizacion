@@ -1,0 +1,109 @@
+<div class="form-header">
+  <div>
+    <h2>Editar caso de prueba</h2>
+    <p class="path">Inicio / Casos de prueba / Editar</p>
+  </div>
+  <a routerLink="/casos-prueba" class="btn-secondary">← Volver al listado</a>
+</div>
+
+<section class="view">
+  @if (loading()) {
+    <p class="empty">Cargando caso de prueba…</p>
+  } @else {
+    <div class="card form-card">
+      @if (error()) {
+        <div class="login-error" role="alert">{{ error() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="field">
+          <label for="titulo">Título</label>
+          <input id="titulo" type="text" formControlName="titulo" placeholder="Ej: Validar transferencia entre cuentas propias" />
+          @if (titulo?.invalid && titulo?.touched) {
+            <span class="field-error">
+              @if (titulo?.errors?.['required']) { El título es obligatorio. }
+              @else if (titulo?.errors?.['maxlength']) { Máximo 150 caracteres. }
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" formControlName="descripcion" rows="5" placeholder="Describe el objetivo y pasos del caso de prueba…"></textarea>
+          <span class="char-count">{{ descripcion?.value?.length ?? 0 }}/1000</span>
+          @if (descripcion?.invalid && descripcion?.touched) {
+            <span class="field-error">Máximo 1000 caracteres.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="modulo">Módulo</label>
+          <input id="modulo" type="text" formControlName="modulo" placeholder="Ej: Transferencias" />
+          @if (modulo?.invalid && modulo?.touched) {
+            <span class="field-error">El módulo es obligatorio.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label>Criticidad</label>
+          <div class="role-grid criticidad-grid">
+            @for (c of criticidades; track c) {
+              <div
+                class="role-opt"
+                [class.active]="criticidad?.value === c"
+                [class.alta]="c === 'ALTA'"
+                [class.media]="c === 'MEDIA'"
+                [class.baja]="c === 'BAJA'"
+                (click)="criticidad?.setValue(c)"
+                role="radio"
+                [attr.aria-checked]="criticidad?.value === c"
+              >
+                {{ labelCriticidad(c) }}
+              </div>
+            }
+          </div>
+          @if (criticidad?.invalid && criticidad?.touched) {
+            <span class="field-error">Selecciona una criticidad.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="estado">Estado</label>
+          <select id="estado" formControlName="estado">
+            @for (e of estados; track e) {
+              <option [ngValue]="e">{{ labelEstado(e) }}</option>
+            }
+          </select>
+          @if (estado?.invalid && estado?.touched) {
+            <span class="field-error">El estado es obligatorio.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="requisitoId">Requisito asociado</label>
+          <select id="requisitoId" formControlName="requisitoId">
+            <option [ngValue]="null">Selecciona un requisito</option>
+            @for (r of requisitos(); track r.id) {
+              <option [ngValue]="r.id">{{ r.codigo }} — {{ r.nombre }}</option>
+            }
+          </select>
+          @if (requisitoId?.invalid && requisitoId?.touched) {
+            <span class="field-error">El requisito es obligatorio.</span>
+          }
+        </div>
+
+        <div class="actions">
+          <a routerLink="/casos-prueba" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary" [disabled]="guardando()">
+            @if (guardando()) {
+              <span class="spinner"></span>
+              Guardando…
+            } @else {
+              Guardar cambios
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</section>
