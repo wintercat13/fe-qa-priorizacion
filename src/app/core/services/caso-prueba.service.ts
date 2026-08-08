@@ -81,6 +81,19 @@ export class CasoPruebaService {
       );
   }
 
+  listarPriorizados(modulo?: string): Observable<CasoPrueba[]> {
+    let url = `${this.baseUrl}/priorizados`;
+    if (modulo) {
+      url += `?modulo=${encodeURIComponent(modulo)}`;
+    }
+    return this.http
+      .get<ApiResponse<CasoPrueba[]>>(url)
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo cargar la cola de priorización.'))
+      );
+  }
+
   archivar(id: number): Observable<CasoPrueba> {
     return this.http
       .put<ApiResponse<CasoPrueba>>(`${this.baseUrl}/${id}/archivar`, {})
