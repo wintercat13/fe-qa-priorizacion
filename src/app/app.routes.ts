@@ -48,6 +48,13 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'priorizacion',
+        loadComponent: () =>
+          import('./features/priorizacion/priorizacion.component').then(
+            (m) => m.PriorizacionComponent
+          ),
+      },
+      {
         path: 'usuarios',
         canActivate: [roleGuard('ADMINISTRADOR_QA')],
         children: [
