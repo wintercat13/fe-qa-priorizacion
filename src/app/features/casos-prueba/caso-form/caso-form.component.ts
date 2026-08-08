@@ -7,13 +7,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { CRITICIDADES, Criticidad, Requisito } from '../../../core/models/caso-prueba.model';
+import { CasoPruebaPayload, CRITICIDADES, Criticidad, Requisito } from '../../../core/models/caso-prueba.model';
 import { CasoPruebaService } from '../../../core/services/caso-prueba.service';
+import { DuplicateAlertComponent } from '../../../shared/components/duplicate-alert/duplicate-alert.component';
 
 @Component({
   selector: 'app-caso-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, DuplicateAlertComponent],
   templateUrl: './caso-form.component.html',
   styleUrl: './caso-form.component.css',
 })
@@ -29,6 +30,11 @@ export class CasoFormComponent implements OnInit {
   loadingRequisitos = signal(false);
   guardando = signal(false);
   error = signal<string | null>(null);
+
+  alertaDuplicado = signal(false);
+  casoSimilarId = signal<number | null>(null);
+  porcentajeSimilitud = signal<number>(0);
+  payloadPendiente = signal<CasoPruebaPayload | null>(null);
 
   constructor() {
     this.form = this.fb.group({
@@ -64,10 +70,70 @@ export class CasoFormComponent implements OnInit {
       return;
     }
 
-    this.guardando.set(true);
+    const payload: CasoPruebaPayload = this.form.value;
+    this.payloadPendiente.set(payload);
     this.error.set(null);
+    this.guardando.set(true);
 
-    const payload = this.form.value;
+    this.casoService.verificarDuplicidad(payload.titulo, payload.modulo).subscribe({
+      next: (resultado) => {
+        if (resultado.posibleDuplicado) {
+          this.alertaDuplicado.set(true);
+          this.casoSimilarId.set(resultado.casoSimilarId ?? null);
+          this.porcentajeSimilitud.set(resultado.porcentajeSimilitud ?? 0);
+          this.guardando.set(false);
+        } else {
+          this.guardar(payload);
+        }
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.guardando.set(false);
+      },
+    });
+  }
+
+  confirmarDistinto(): void {
+    const payload = this.payloadPendiente();
+    if (!payload) return;
+
+    this.guardando.set(true);
+    this.alertaDuplicado.set(false);
+    this.casoService.crear(payload).subscribe({
+      next: (nuevoCaso) => {
+        if (nuevoCaso.id) {
+          this.casoService.confirmarNoDuplicado(nuevoCaso.id).subscribe({
+            next: () => {
+              this.guardando.set(false);
+              void this.router.navigate(['/casos-prueba']);
+            },
+            error: (err: Error) => {
+              this.error.set(err.message);
+              this.guardando.set(false);
+            },
+          });
+        } else {
+          this.guardando.set(false);
+          void this.router.navigate(['/casos-prueba']);
+        }
+      },
+      error: (err: Error) => {
+        this.error.set(err.message);
+        this.guardando.set(false);
+      },
+    });
+  }
+
+  continuarGuardando(): void {
+    const payload = this.payloadPendiente();
+    if (!payload) return;
+
+    this.alertaDuplicado.set(false);
+    this.guardar(payload);
+  }
+
+  private guardar(payload: CasoPruebaPayload): void {
+    this.guardando.set(true);
     this.casoService.crear(payload).subscribe({
       next: () => {
         this.guardando.set(false);

@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { ApiResponse } from '../models/usuario.model';
-import { CasoPrueba, CasoPruebaPayload, Requisito } from '../models/caso-prueba.model';
+import { CasoPrueba, CasoPruebaPayload, Requisito, VerificacionDuplicidad } from '../models/caso-prueba.model';
 
 @Injectable({ providedIn: 'root' })
 export class CasoPruebaService {
@@ -51,6 +51,42 @@ export class CasoPruebaService {
       .pipe(
         map((response) => response.data),
         catchError((error) => this.handleError(error, 'No se pudieron cargar los requisitos.'))
+      );
+  }
+
+  verificarDuplicidad(titulo: string, modulo: string): Observable<VerificacionDuplicidad> {
+    return this.http
+      .post<ApiResponse<VerificacionDuplicidad>>(`${this.baseUrl}/verificar-duplicidad`, { titulo, modulo })
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo verificar la duplicidad.'))
+      );
+  }
+
+  confirmarNoDuplicado(id: number): Observable<CasoPrueba> {
+    return this.http
+      .put<ApiResponse<CasoPrueba>>(`${this.baseUrl}/${id}/confirmar-no-duplicado`, {})
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo confirmar el caso como distinto.', true))
+      );
+  }
+
+  listarObsoletos(): Observable<CasoPrueba[]> {
+    return this.http
+      .get<ApiResponse<CasoPrueba[]>>(`${this.baseUrl}/obsoletos`)
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo cargar los casos obsoletos.'))
+      );
+  }
+
+  archivar(id: number): Observable<CasoPrueba> {
+    return this.http
+      .put<ApiResponse<CasoPrueba>>(`${this.baseUrl}/${id}/archivar`, {})
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudo archivar el caso de prueba.', true))
       );
   }
 
