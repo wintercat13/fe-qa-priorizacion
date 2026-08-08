@@ -1,0 +1,86 @@
+<div class="priorizacion-header">
+  <div>
+    <h2>Cola de ejecución priorizada</h2>
+    <p class="path">Inicio / Priorización</p>
+  </div>
+</div>
+
+<section class="view">
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="search">
+          <span class="ic">🔍</span>
+          <input
+            type="text"
+            [ngModel]="filtroModulo()"
+            (ngModelChange)="filtroModulo.set($event)"
+            (keyup.enter)="aplicarFiltro()"
+            placeholder="Filtrar por módulo..."
+          />
+        </div>
+        <select
+          class="filter"
+          [ngModel]="filtroModulo()"
+          (ngModelChange)="filtroModulo.set($event); aplicarFiltro()"
+        >
+          <option value="">Todos los módulos</option>
+          @for (m of modulos(); track m) {
+            <option [ngValue]="m">{{ m }}</option>
+          }
+        </select>
+        <button type="button" class="btn-primary" (click)="aplicarFiltro()">
+          Filtrar
+        </button>
+      </div>
+      <div class="toolbar-right">
+        <span class="count">{{ casos().length }} caso(s) activo(s)</span>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <p class="empty">Cargando cola de priorización…</p>
+    } @else if (casos().length === 0) {
+      <p class="empty">No hay casos activos en la cola de priorización.</p>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-rank">#</th>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Módulo</th>
+              <th>Score de prioridad</th>
+              <th class="actions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of casos(); track c.id; let i = $index) {
+              <tr>
+                <td class="col-rank">
+                  <span class="rank" [class]="posicionClass(i)">{{ i + 1 }}</span>
+                </td>
+                <td class="id">CP-{{ c.id }}</td>
+                <td>{{ c.titulo }}</td>
+                <td>{{ c.modulo }}</td>
+                <td>
+                  <span class="score-badge" [class]="scoreClass(c.scorePrioridad)">
+                    {{ c.scorePrioridad.toFixed(1) }}
+                  </span>
+                </td>
+                <td class="actions">
+                  <a [routerLink]="['/casos-prueba', c.id, 'editar']" class="btn-action edit">Ver caso</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
