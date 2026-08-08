@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CasoPruebaService } from '../../../core/services/caso-prueba.service';
-import { CasoPrueba, Criticidad } from '../../../core/models/caso-prueba.model';
+import { CasoPrueba, Criticidad, EstadoCaso, ESTADOS_CASO } from '../../../core/models/caso-prueba.model';
 
 @Component({
   selector: 'app-caso-list',
@@ -20,6 +20,9 @@ export class CasoListComponent implements OnInit {
   error = signal<string | null>(null);
   filtroTexto = signal('');
   filtroCriticidad = signal<Criticidad | ''>('');
+  filtroEstado = signal<EstadoCaso | ''>('');
+
+  estados = ESTADOS_CASO;
 
   ngOnInit(): void {
     this.cargar();
@@ -43,10 +46,12 @@ export class CasoListComponent implements OnInit {
   casosFiltrados(): CasoPrueba[] {
     const texto = this.filtroTexto().toLowerCase();
     const crit = this.filtroCriticidad();
+    const estado = this.filtroEstado();
     return this.casos().filter((c) => {
       const matchTexto = (c.titulo + ' ' + c.modulo).toLowerCase().includes(texto);
       const matchCrit = !crit || c.criticidad === crit;
-      return matchTexto && matchCrit;
+      const matchEstado = !estado || c.estado === estado;
+      return matchTexto && matchCrit && matchEstado;
     });
   }
 
@@ -64,6 +69,9 @@ export class CasoListComponent implements OnInit {
       case 'PENDIENTE': return 'pill-Pendiente';
       case 'EN_CURSO': return 'pill-Encurso';
       case 'EJECUTADO': return 'pill-Ejecutado';
+      case 'BLOQUEADO': return 'pill-Bloqueado';
+      case 'OBSOLETO': return 'pill-Obsoleto';
+      case 'ARCHIVADO': return 'pill-Archivado';
       default: return '';
     }
   }
@@ -72,5 +80,16 @@ export class CasoListComponent implements OnInit {
     if (score >= 8) return 'score-hi';
     if (score >= 5) return 'score-mid';
     return 'score-lo';
+  }
+
+  labelEstado(estado: EstadoCaso): string {
+    return estado.replace('_', ' ').toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase());
+  }
+
+  filaClase(caso: CasoPrueba): string {
+    if (caso.estado === 'OBSOLETO') return 'fila-obsoleto';
+    if (caso.estado === 'ARCHIVADO') return 'fila-archivado';
+    if (caso.posibleDuplicado) return 'fila-duplicado';
+    return '';
   }
 }

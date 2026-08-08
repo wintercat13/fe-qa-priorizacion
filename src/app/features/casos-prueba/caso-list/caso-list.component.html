@@ -33,6 +33,16 @@
           <option value="MEDIA">Media</option>
           <option value="BAJA">Baja</option>
         </select>
+        <select
+          class="filter"
+          [ngModel]="filtroEstado()"
+          (ngModelChange)="filtroEstado.set($event)"
+        >
+          <option value="">Todo estado</option>
+          @for (e of estados; track e) {
+            <option [ngValue]="e">{{ labelEstado(e) }}</option>
+          }
+        </select>
       </div>
     </div>
 
@@ -58,9 +68,14 @@
           </thead>
           <tbody>
             @for (c of casosFiltrados(); track c.id) {
-              <tr>
+              <tr [class]="filaClase(c)">
                 <td class="id">CP-{{ c.id }}</td>
-                <td>{{ c.titulo }}</td>
+                <td>
+                  {{ c.titulo }}
+                  @if (c.posibleDuplicado) {
+                    <span class="badge-duplicado" title="Posible duplicado">⚠️</span>
+                  }
+                </td>
                 <td>{{ c.modulo }}</td>
                 <td class="crit" [class]="criticidadClass(c.criticidad)">{{ c.criticidad | titlecase }}</td>
                 <td><span class="pill" [class]="estadoClass(c.estado)">{{ c.estado | titlecase }}</span></td>

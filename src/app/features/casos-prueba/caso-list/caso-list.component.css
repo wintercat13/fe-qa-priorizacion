@@ -207,6 +207,21 @@ td.id {
   color: var(--teal-dark);
 }
 
+.pill-Bloqueado {
+  background: #F5E1DE;
+  color: var(--risk);
+}
+
+.pill-Obsoleto {
+  background: #F0E8DD;
+  color: #7A5A2E;
+}
+
+.pill-Archivado {
+  background: #EAEAEA;
+  color: #666;
+}
+
 .score-badge {
   font-family: var(--mono);
   font-weight: 700;
@@ -261,6 +276,26 @@ td.id {
 .btn-action.edit {
   background: var(--teal-pale);
   color: var(--teal-dark);
+}
+
+.badge-duplicado {
+  display: inline-flex;
+  margin-left: 6px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.fila-obsoleto {
+  background: #FDF9F3;
+}
+
+.fila-archivado {
+  background: #F8F8F8;
+  opacity: 0.8;
+}
+
+.fila-duplicado {
+  background: #FFFBF2;
 }
 
 @media (max-width: 700px) {

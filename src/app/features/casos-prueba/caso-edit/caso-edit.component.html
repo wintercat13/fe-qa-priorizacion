@@ -15,6 +15,15 @@
         <div class="login-error" role="alert">{{ error() }}</div>
       }
 
+      @if (alertaDuplicado() && casoSimilarId()) {
+        <app-duplicate-alert
+          [casoSimilarId]="casoSimilarId()!"
+          [porcentajeSimilitud]="porcentajeSimilitud()"
+          (confirmarDistinto)="confirmarDistinto()"
+          (continuar)="continuarGuardando()"
+        />
+      }
+
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
         <div class="field">
           <label for="titulo">Título</label>
@@ -93,6 +102,19 @@
         </div>
 
         <div class="actions">
+          @if (estado?.value === 'OBSOLETO' || estado?.value === 'ARCHIVADO') {
+            <button
+              type="button"
+              class="btn-warning"
+              [disabled]="guardando()"
+              (click)="archivar()"
+            >
+              @if (guardando()) {
+                <span class="spinner"></span>
+              }
+              {{ estado?.value === 'ARCHIVADO' ? 'Archivado' : 'Archivar' }}
+            </button>
+          }
           <a routerLink="/casos-prueba" class="btn-secondary">Cancelar</a>
           <button type="submit" class="btn-primary" [disabled]="guardando()">
             @if (guardando()) {

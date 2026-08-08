@@ -1,0 +1,23 @@
+<div class="duplicate-alert" role="alert">
+  <div class="alert-icon">⚠️</div>
+  <div class="alert-content">
+    <strong>Posible caso duplicado detectado</strong>
+    <p>
+      El caso que estás guardando tiene una similitud del
+      <span class="similitud">{{ similitudFormateada() }}</span>
+      con
+      <a [routerLink]="['/casos-prueba', casoSimilarId(), 'editar']" class="link">
+        CP-{{ casoSimilarId() }}
+      </a>.
+      Revisa si es el mismo antes de continuar.
+    </p>
+  </div>
+  <div class="alert-actions">
+    <button type="button" class="btn-text" (click)="confirmarDistinto.emit()">
+      Confirmar como distinto
+    </button>
+    <button type="button" class="btn-primary" (click)="continuar.emit()">
+      Continuar guardando
+    </button>
+  </div>
+</div>
