@@ -1,0 +1,98 @@
+<div class="criterios-header">
+  <div>
+    <h2>Configuración de criterios y pesos</h2>
+    <p class="path">Inicio / Configuración / Priorización</p>
+  </div>
+  <a routerLink="/priorizacion" class="btn-secondary">← Volver a priorización</a>
+</div>
+
+<section class="view">
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  @if (exito()) {
+    <div class="success-alert" role="status">{{ exito() }}</div>
+  }
+
+  @if (loading()) {
+    <p class="empty">Cargando criterios de priorización…</p>
+  } @else {
+    <div class="card">
+      <div class="summary">
+        <div class="summary-item">
+          <span class="label">Suma de pesos activos</span>
+          <span class="value" [class.ok]="esValido()" [class.error]="!esValido()">
+            {{ porcentaje(sumaPesos()) }}
+          </span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Restante</span>
+          <span class="value muted">{{ porcentaje(restante()) }}</span>
+        </div>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" novalidate>
+        <ul class="criterios-list">
+          @for (c of criterios(); track c.id) {
+            <li class="criterio-item" [class.inactivo]="!c.activo">
+              <div class="criterio-main">
+                <div class="criterio-info">
+                  <strong>{{ c.nombre }}</strong>
+                  <span class="peso-valor">{{ porcentaje(c.peso) }}</span>
+                </div>
+                <label class="toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="c.activo"
+                    (change)="toggleActivo(c)"
+                  />
+                  <span class="toggle-slider"></span>
+                  <span class="toggle-label">{{ c.activo ? 'Activo' : 'Inactivo' }}</span>
+                </label>
+              </div>
+
+              @if (c.activo) {
+                <div class="slider-wrap">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    [value]="c.peso * 100"
+                    (input)="actualizarPeso(c.id, +$any($event).target.value)"
+                    class="slider"
+                  />
+                  <div class="slider-hints">
+                    <span>0%</span>
+                    <span>50%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+              }
+            </li>
+          }
+        </ul>
+
+        @if (!esValido()) {
+          <div class="validation-error" role="alert">
+            La suma de los pesos activos debe ser exactamente 100%. Actualmente es
+            {{ porcentaje(sumaPesos()) }}.
+          </div>
+        }
+
+        <div class="actions">
+          <a routerLink="/priorizacion" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary" [disabled]="guardando() || !esValido()">
+            @if (guardando()) {
+              <span class="spinner"></span>
+              Guardando…
+            } @else {
+              Guardar configuración
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</section>

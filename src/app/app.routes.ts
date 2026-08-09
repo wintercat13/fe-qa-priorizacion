@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { AdminLayoutComponent } from './shared/layout/admin-layout/admin-layout.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/priorizacion/priorizacion.component').then(
             (m) => m.PriorizacionComponent
+          ),
+      },
+      {
+        path: 'configuracion-priorizacion',
+        canActivate: [roleGuard('ADMINISTRADOR_QA')],
+        loadComponent: () =>
+          import('./features/criterios-priorizacion/criterios-priorizacion.component').then(
+            (m) => m.CriteriosPriorizacionComponent
           ),
       },
       {
