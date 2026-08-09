@@ -1,0 +1,82 @@
+<div class="form-header">
+  <div>
+    <h2>Registrar ejecución</h2>
+    <p class="path">Inicio / Priorización / Registrar ejecución</p>
+  </div>
+  <a routerLink="/priorizacion" class="btn-secondary">← Volver a la cola</a>
+</div>
+
+<section class="view">
+  @if (loadingCaso()) {
+    <p class="empty">Cargando caso de prueba…</p>
+  } @else if (caso()) {
+    <div class="card form-card">
+      <div class="caso-resumen">
+        <span class="caso-id">CP-{{ caso()!.id }}</span>
+        <h3>{{ caso()!.titulo }}</h3>
+        <p class="caso-meta">{{ caso()!.modulo }} · Criticidad {{ caso()!.criticidad | titlecase }}</p>
+      </div>
+
+      @if (error()) {
+        <div class="login-error" role="alert">{{ error() }}</div>
+      }
+
+      @if (exito()) {
+        <div class="success-alert" role="status">{{ exito() }}</div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <div class="field">
+          <label>Resultado de la ejecución</label>
+          <div class="role-grid resultado-grid">
+            @for (r of resultados; track r) {
+              <div
+                class="role-opt"
+                [class.active]="resultado?.value === r"
+                [class.aprobado]="r === 'APROBADO'"
+                [class.fallido]="r === 'FALLIDO'"
+                [class.bloqueado]="r === 'BLOQUEADO'"
+                (click)="resultado?.setValue(r)"
+                role="radio"
+                [attr.aria-checked]="resultado?.value === r"
+              >
+                {{ labelResultado(r) }}
+              </div>
+            }
+          </div>
+          @if (resultado?.invalid && resultado?.touched) {
+            <span class="field-error">Debes seleccionar un resultado.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="observaciones">Observaciones</label>
+          <textarea
+            id="observaciones"
+            formControlName="observaciones"
+            rows="5"
+            placeholder="Describe el resultado, errores encontrados o evidencia…"
+          ></textarea>
+          <span class="char-count">{{ observaciones?.value?.length ?? 0 }}/500</span>
+          @if (observaciones?.invalid && observaciones?.touched) {
+            <span class="field-error">Máximo 500 caracteres.</span>
+          }
+        </div>
+
+        <div class="actions">
+          <a routerLink="/priorizacion" class="btn-secondary">Cancelar</a>
+          <button type="submit" class="btn-primary" [disabled]="guardando()">
+            @if (guardando()) {
+              <span class="spinner"></span>
+              Guardando…
+            } @else {
+              Guardar ejecución
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  } @else {
+    <p class="empty">No se pudo cargar el caso de prueba.</p>
+  }
+</section>

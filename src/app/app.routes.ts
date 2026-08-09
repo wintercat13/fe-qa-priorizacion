@@ -64,6 +64,18 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'ejecuciones',
+        children: [
+          {
+            path: 'nuevo/:casoPruebaId',
+            loadComponent: () =>
+              import('./features/ejecucion/ejecucion-form/ejecucion-form.component').then(
+                (m) => m.EjecucionFormComponent
+              ),
+          },
+        ],
+      },
+      {
         path: 'usuarios',
         canActivate: [roleGuard('ADMINISTRADOR_QA')],
         children: [

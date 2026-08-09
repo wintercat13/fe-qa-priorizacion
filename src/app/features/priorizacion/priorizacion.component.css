@@ -260,6 +260,11 @@ tbody tr:hover {
   color: var(--teal-dark);
 }
 
+.btn-action.run {
+  background: var(--teal);
+  color: #fff;
+}
+
 @media (max-width: 700px) {
   .priorizacion-header {
     flex-direction: column;
