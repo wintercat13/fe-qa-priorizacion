@@ -19,6 +19,15 @@
       <div class="nav-group">Administración</div>
       <button
         class="nav-item"
+        routerLink="/configuracion-priorizacion"
+        routerLinkActive="active"
+        [class.disabled]="!esAdmin()"
+        [disabled]="!esAdmin()"
+      >
+        <span class="ic">⚙</span><span class="txt">Criterios de priorización</span>
+      </button>
+      <button
+        class="nav-item"
         routerLink="/usuarios"
         routerLinkActive="active"
         [class.disabled]="!esAdmin()"
