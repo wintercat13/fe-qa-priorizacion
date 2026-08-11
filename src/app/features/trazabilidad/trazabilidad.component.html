@@ -1,0 +1,84 @@
+<div class="trazabilidad-header">
+  <div>
+    <h2>Trazabilidad requisito-caso-ejecución</h2>
+    <p class="path">Inicio / Casos de prueba / Trazabilidad</p>
+  </div>
+  <a [routerLink]="['/casos-prueba']" class="btn-secondary">← Volver al listado</a>
+</div>
+
+<section class="view">
+  @if (esSoloLectura()) {
+    <div class="read-only-banner" role="note">Modo solo lectura</div>
+  }
+
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <p class="empty">Cargando trazabilidad…</p>
+  } @else if (trazabilidad()) {
+    <div class="card">
+      <div class="chain">
+        <div class="node">
+          <div class="node-icon">{{ iconoNodo('requisito') }}</div>
+          <div class="node-body">
+            <span class="node-label">Requisito</span>
+            <strong class="node-title">{{ trazabilidad()!.requisito.codigo }}</strong>
+            <p class="node-desc">{{ trazabilidad()!.requisito.nombre }}</p>
+          </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="node">
+          <div class="node-icon">{{ iconoNodo('caso') }}</div>
+          <div class="node-body">
+            <span class="node-label">Caso de prueba</span>
+            <strong class="node-title">CP-{{ trazabilidad()!.casoPrueba.id }}</strong>
+            <p class="node-desc">{{ trazabilidad()!.casoPrueba.titulo }}</p>
+          </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="node">
+          <div class="node-icon">{{ iconoNodo('ejecucion') }}</div>
+          <div class="node-body">
+            <span class="node-label">Última ejecución</span>
+            @if (trazabilidad()!.ultimaEjecucion) {
+              <span class="pill" [class]="resultadoClass(trazabilidad()!.ultimaEjecucion!.resultado)">
+                {{ labelEstado(trazabilidad()!.ultimaEjecucion!.resultado) }}
+              </span>
+              <p class="node-desc">
+                {{ trazabilidad()!.ultimaEjecucion!.fecha | date: 'longDate' }}
+              </p>
+            } @else {
+              <p class="node-desc empty-node">Sin ejecuciones registradas</p>
+            }
+          </div>
+        </div>
+
+        <div class="connector"></div>
+
+        <div class="node">
+          <div class="node-icon">{{ iconoNodo('estado') }}</div>
+          <div class="node-body">
+            <span class="node-label">Estado actual</span>
+            <span class="pill" [class]="estadoClass(trazabilidad()!.estadoActual)">
+              {{ labelEstado(trazabilidad()!.estadoActual) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a [routerLink]="['/casos-prueba', trazabilidad()!.casoPrueba.id, 'editar']" class="btn-secondary">
+          Ver caso de prueba
+        </a>
+      </div>
+    </div>
+  } @else {
+    <p class="empty">No se encontró información de trazabilidad.</p>
+  }
+</section>
