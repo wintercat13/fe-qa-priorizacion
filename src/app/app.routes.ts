@@ -76,6 +76,13 @@ export const routes: Routes = [
         ],
       },
       {
+        path: 'trazabilidad/:casoPruebaId',
+        loadComponent: () =>
+          import('./features/trazabilidad/trazabilidad.component').then(
+            (m) => m.TrazabilidadComponent
+          ),
+      },
+      {
         path: 'usuarios',
         canActivate: [roleGuard('ADMINISTRADOR_QA')],
         children: [
