@@ -102,6 +102,7 @@
         </div>
 
         <div class="actions">
+          <a [routerLink]="['/trazabilidad', casoId]" class="btn-secondary">Ver trazabilidad</a>
           @if (estado?.value === 'OBSOLETO' || estado?.value === 'ARCHIVADO') {
             <button
               type="button"

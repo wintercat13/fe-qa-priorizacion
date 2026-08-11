@@ -278,6 +278,12 @@ td.id {
   color: var(--teal-dark);
 }
 
+.btn-action.trace {
+  background: #F0F4F8;
+  color: var(--navy);
+  padding: 6px 8px;
+}
+
 .badge-duplicado {
   display: inline-flex;
   margin-left: 6px;
