@@ -83,6 +83,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'reportes',
+        canActivate: [roleGuard('ADMINISTRADOR_QA')],
+        loadComponent: () =>
+          import('./features/reportes/reportes.component').then(
+            (m) => m.ReportesComponent
+          ),
+      },
+      {
         path: 'usuarios',
         canActivate: [roleGuard('ADMINISTRADOR_QA')],
         children: [

@@ -1,0 +1,76 @@
+<div class="reportes-header">
+  <div>
+    <h2>Reportes</h2>
+    <p class="path">Inicio / Reportes</p>
+  </div>
+</div>
+
+<section class="view">
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  @if (exito()) {
+    <div class="success-alert" role="status">{{ exito() }}</div>
+  }
+
+  <div class="card filter-card">
+    <div class="filter-row">
+      <div class="field">
+        <label for="desde">Desde</label>
+        <input id="desde" type="date" [ngModel]="desde()" (ngModelChange)="desde.set($event)" />
+      </div>
+      <div class="field">
+        <label for="hasta">Hasta</label>
+        <input id="hasta" type="date" [ngModel]="hasta()" (ngModelChange)="hasta.set($event)" />
+      </div>
+      <button type="button" class="btn-secondary" (click)="aplicarFiltro()">
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  @if (loadingMetricas()) {
+    <p class="empty">Cargando métricas del período…</p>
+  } @else if (!metricas()) {
+    <p class="empty">No hay datos suficientes para generar el reporte.</p>
+  } @else {
+    <div class="preview-card">
+      <h3>Vista previa del reporte</h3>
+      <div class="preview-grid">
+        <div class="preview-item">
+          <span class="preview-label">Cobertura</span>
+          <span class="preview-value">{{ metricas()!.cobertura }}%</span>
+        </div>
+        <div class="preview-item">
+          <span class="preview-label">% Ejecutado</span>
+          <span class="preview-value">{{ metricas()!.porcentajeEjecutado }}%</span>
+        </div>
+        <div class="preview-item">
+          <span class="preview-label">Casos obsoletos depurados</span>
+          <span class="preview-value">{{ metricas()!.casosObsoletosDepurados }}</span>
+        </div>
+        <div class="preview-item">
+          <span class="preview-label">Cumplimiento SLA</span>
+          <span class="preview-value">{{ metricas()!.cumplimientoSLA }}%</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button
+          type="button"
+          class="btn-primary"
+          (click)="exportarPdf()"
+          [disabled]="exportando()"
+        >
+          @if (exportando()) {
+            <span class="spinner"></span>
+            Generando PDF…
+          } @else {
+            Exportar reporte PDF
+          }
+        </button>
+      </div>
+    </div>
+  }
+</section>

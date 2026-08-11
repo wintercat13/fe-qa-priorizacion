@@ -7,6 +7,49 @@
 </header>
 
 <section class="view">
-  <p>Bienvenido(a) al Sistema Inteligente de Gestión QA.</p>
-  <p class="muted">Módulo en construcción para la historia US-01.</p>
+  @if (error()) {
+    <div class="login-error" role="alert">{{ error() }}</div>
+  }
+
+  <div class="card filter-card">
+    <div class="filter-row">
+      <div class="field">
+        <label for="desde">Desde</label>
+        <input id="desde" type="date" [ngModel]="desde()" (ngModelChange)="desde.set($event)" />
+      </div>
+      <div class="field">
+        <label for="hasta">Hasta</label>
+        <input id="hasta" type="date" [ngModel]="hasta()" (ngModelChange)="hasta.set($event)" />
+      </div>
+      <button type="button" class="btn-primary" (click)="aplicarFiltro()">Actualizar métricas</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <p class="empty">Cargando métricas…</p>
+  } @else if (!metricas()) {
+    <p class="empty">No hay datos suficientes para generar métricas.</p>
+  } @else {
+    <div class="kpi-grid">
+      <div class="kpi">
+        <span class="kpi-label">Cobertura</span>
+        <span class="kpi-value">{{ metricas()!.cobertura }}%</span>
+        <div class="progress-bar"><div class="progress-fill" [style.width.%]="metricas()!.cobertura"></div></div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">% Ejecutado</span>
+        <span class="kpi-value">{{ metricas()!.porcentajeEjecutado }}%</span>
+        <div class="progress-bar"><div class="progress-fill" [style.width.%]="metricas()!.porcentajeEjecutado"></div></div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Casos obsoletos depurados</span>
+        <span class="kpi-value">{{ metricas()!.casosObsoletosDepurados }}</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Cumplimiento SLA</span>
+        <span class="kpi-value">{{ metricas()!.cumplimientoSLA }}%</span>
+        <div class="progress-bar"><div class="progress-fill" [style.width.%]="metricas()!.cumplimientoSLA"></div></div>
+      </div>
+    </div>
+  }
 </section>

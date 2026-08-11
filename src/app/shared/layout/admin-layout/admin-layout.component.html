@@ -16,6 +16,17 @@
         <span class="ic">⇅</span><span class="txt">Priorización</span>
       </button>
 
+      <div class="nav-group">Reportes</div>
+      <button
+        class="nav-item"
+        routerLink="/reportes"
+        routerLinkActive="active"
+        [class.disabled]="!esAdmin()"
+        [disabled]="!esAdmin()"
+      >
+        <span class="ic">📊</span><span class="txt">Reportes</span>
+      </button>
+
       <div class="nav-group">Administración</div>
       <button
         class="nav-item"
