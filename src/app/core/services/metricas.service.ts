@@ -1,27 +1,52 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { ApiResponse } from '../models/usuario.model';
-import { MetricasDashboard, RangoFechas } from '../models/metricas.model';
+import {
+  AgrupacionTendencia,
+  FiltroDashboard,
+  MetricaTendencia,
+  MetricasDashboard,
+} from '../models/metricas.model';
 
 @Injectable({ providedIn: 'root' })
 export class MetricasService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = '/api/v1/metricas';
+  private readonly baseUrl = '/api/v1/dashboard';
 
-  obtener(rango?: RangoFechas): Observable<MetricasDashboard> {
-    let url = this.baseUrl;
-    if (rango) {
-      const params = new URLSearchParams();
-      params.set('desde', rango.desde);
-      params.set('hasta', rango.hasta);
-      url += `?${params.toString()}`;
+  private buildParams(filtro?: Partial<FiltroDashboard>): HttpParams {
+    let params = new HttpParams();
+    if (filtro?.desde) {
+      params = params.set('desde', filtro.desde);
     }
+    if (filtro?.hasta) {
+      params = params.set('hasta', filtro.hasta);
+    }
+    if (filtro?.responsableId) {
+      params = params.set('responsableId', filtro.responsableId.toString());
+    }
+    return params;
+  }
+
+  obtener(filtro?: Partial<FiltroDashboard>): Observable<MetricasDashboard> {
     return this.http
-      .get<ApiResponse<MetricasDashboard>>(url)
+      .get<ApiResponse<MetricasDashboard>>(this.baseUrl, { params: this.buildParams(filtro) })
       .pipe(
         map((response) => response.data),
         catchError((error) => this.handleError(error, 'No se pudieron cargar las métricas.'))
+      );
+  }
+
+  obtenerTendencias(
+    filtro: Partial<FiltroDashboard>,
+    agrupacion: AgrupacionTendencia = 'semana'
+  ): Observable<MetricaTendencia[]> {
+    const params = this.buildParams(filtro).set('agrupacion', agrupacion);
+    return this.http
+      .get<ApiResponse<MetricaTendencia[]>>(`${this.baseUrl}/tendencias`, { params })
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => this.handleError(error, 'No se pudieron cargar las tendencias.'))
       );
   }
 

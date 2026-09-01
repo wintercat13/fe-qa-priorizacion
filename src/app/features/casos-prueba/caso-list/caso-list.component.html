@@ -81,7 +81,7 @@
                 <td><span class="pill" [class]="estadoClass(c.estado)">{{ c.estado | titlecase }}</span></td>
                 <td><span class="score-badge" [class]="scoreClass(c.scorePrioridad)">{{ c.scorePrioridad.toFixed(1) }}</span></td>
                 <td class="actions">
-                  <a [routerLink]="['/trazabilidad', c.id]" class="btn-action trace" title="Ver trazabilidad">🔗</a>
+                  <a [routerLink]="['/trazabilidad', c.id]" class="btn-action trace" title="Ver trazabilidad">Trazar</a>
                   <a [routerLink]="['/casos-prueba', c.id, 'editar']" class="btn-action edit">Editar</a>
                 </td>
               </tr>

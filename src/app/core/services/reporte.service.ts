@@ -1,21 +1,43 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { RangoFechas } from '../models/metricas.model';
+
+export interface FiltroExporteReporte {
+  desde: string;
+  hasta: string;
+  responsableId?: number | null;
+  modulo?: string;
+  prioridad?: string;
+  estado?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = '/api/v1/reportes';
 
-  exportarPdf(rango: RangoFechas): Observable<Blob> {
-    const params = new URLSearchParams();
-    params.set('formato', 'pdf');
-    params.set('desde', rango.desde);
-    params.set('hasta', rango.hasta);
+  exportarPdf(filtro: FiltroExporteReporte): Observable<Blob> {
+    let params = new HttpParams()
+      .set('formato', 'pdf')
+      .set('desde', filtro.desde)
+      .set('hasta', filtro.hasta);
+
+    if (filtro.responsableId) {
+      params = params.set('responsableId', filtro.responsableId.toString());
+    }
+    if (filtro.modulo) {
+      params = params.set('modulo', filtro.modulo);
+    }
+    if (filtro.prioridad) {
+      params = params.set('prioridad', filtro.prioridad);
+    }
+    if (filtro.estado) {
+      params = params.set('estado', filtro.estado);
+    }
 
     return this.http
-      .get(`${this.baseUrl}/export?${params.toString()}`, {
+      .get(`${this.baseUrl}/export`, {
+        params,
         responseType: 'blob',
       })
       .pipe(
