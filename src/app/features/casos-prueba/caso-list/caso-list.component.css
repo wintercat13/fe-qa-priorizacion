@@ -281,7 +281,7 @@ td.id {
 .btn-action.trace {
   background: #F0F4F8;
   color: var(--navy);
-  padding: 6px 8px;
+  padding: 6px 12px;
 }
 
 .badge-duplicado {

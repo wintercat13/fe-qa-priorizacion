@@ -12,8 +12,25 @@
       <button class="nav-item" routerLink="/casos-prueba" routerLinkActive="active">
         <span class="ic">☰</span><span class="txt">Casos de prueba</span>
       </button>
-      <button class="nav-item" routerLink="/priorizacion" routerLinkActive="active">
+      <button
+        class="nav-item"
+        routerLink="/priorizacion"
+        routerLinkActive="active"
+        [class.disabled]="esDesarrollador()"
+        [disabled]="esDesarrollador()"
+      >
         <span class="ic">⇅</span><span class="txt">Priorización</span>
+      </button>
+
+      <div class="nav-group">Reportes</div>
+      <button
+        class="nav-item"
+        routerLink="/reportes"
+        routerLinkActive="active"
+        [class.disabled]="esDesarrollador()"
+        [disabled]="esDesarrollador()"
+      >
+        <span class="ic">◕</span><span class="txt">Reportes</span>
       </button>
 
       <div class="nav-group">Administración</div>
