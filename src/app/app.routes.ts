@@ -50,6 +50,7 @@ export const routes: Routes = [
       },
       {
         path: 'priorizacion',
+        canActivate: [roleGuard('ADMINISTRADOR_QA', 'QA_TESTER')],
         loadComponent: () =>
           import('./features/priorizacion/priorizacion.component').then(
             (m) => m.PriorizacionComponent
@@ -84,7 +85,7 @@ export const routes: Routes = [
       },
       {
         path: 'reportes',
-        canActivate: [roleGuard('ADMINISTRADOR_QA')],
+        canActivate: [roleGuard('ADMINISTRADOR_QA', 'QA_TESTER')],
         loadComponent: () =>
           import('./features/reportes/reportes.component').then(
             (m) => m.ReportesComponent
