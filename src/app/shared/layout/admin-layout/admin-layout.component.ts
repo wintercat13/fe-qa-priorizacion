@@ -25,6 +25,10 @@ export class AdminLayoutComponent {
     return this.usuario?.rol === 'ADMINISTRADOR_QA';
   }
 
+  esDesarrollador(): boolean {
+    return this.usuario?.rol === 'DESARROLLADOR';
+  }
+
   private inicialesDe(nombre: string): string {
     const partes = nombre.split(' ').filter(Boolean);
     return partes.length > 1
